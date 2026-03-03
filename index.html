@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="mainDocTitle">Photon Photography | Pro Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo" id="siteMainLogo">PHOTON</div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active" onclick="location.reload()">HOME</a></li>
+                <li><a onclick="checkAccess('all')">GALLERY</a></li>
+                <li><a href="#">SERVICES</a></li>
+                <li><a href="#">ABOUT</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <button class="auth-btn login-trigger" id="loginBtn" onclick="openModal('loginModal')">Login</button>
+            <button class="auth-btn signup-trigger" id="signupBtn" onclick="openModal('signupModal')">Sign Up</button>
+            
+            <div id="userProfile" class="user-profile" style="display: none;">
+                <button class="auth-btn profile-btn" onclick="toggleDropdown()">
+                    <i class="fas fa-user"></i> <span id="profileName">Profile</span> <i class="fas fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content" id="profileDropdown">
+                    <a onclick="showSavedFavorites('saved')"><i class="fas fa-bookmark"></i> Saved</a>
+                    <a onclick="showSavedFavorites('favorites')"><i class="fas fa-heart"></i> Favorites</a>
+                    <a onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="slider-wrapper">
+        <div class="hero-grid" id="categoryContainer"></div>
+    </main>
+
+    <div id="adminAuthModal" class="modal">
+        <div class="modal-content">
+            <h3>Admin Portal Login</h3>
+            <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Shortcut Detected. Enter Master Key.</p>
+            <input type="password" id="adminSecretKey" placeholder="Enter Admin Password">
+            <button class="submit-btn" onclick="verifyAdmin()">Access Dashboard</button>
+            <p onclick="closeModal('adminAuthModal')" class="close-txt">Cancel</p>
+        </div>
+    </div>
+
+    <div id="masterAdminModal" class="modal">
+        <div class="zenith-dashboard-container">
+            <div class="zenith-sidebar">
+                <div class="zenith-logo">
+                    <div class="zenith-icon" style="background: #20c997;"><i class="fas fa-camera-retro"></i></div>
+                    <div>
+                        <h2>Photon</h2>
+                        <span>DASHBOARD</span>
+                    </div>
+                </div>
+                <div class="zenith-menu-title">OVERVIEW</div>
+                <button class="zenith-nav-btn active" onclick="switchAdminTab('dashboardTab')"><i class="fas fa-th-large"></i> Dashboard</button>
+                <button class="zenith-nav-btn" onclick="switchAdminTab('uploadTab')"><i class="fas fa-cloud-upload-alt"></i> Upload Media</button>
+                <button class="zenith-nav-btn" onclick="switchAdminTab('manageTab')"><i class="fas fa-folder-open"></i> Categories</button>
+                <button class="zenith-nav-btn" onclick="switchAdminTab('settingsTab')"><i class="fas fa-cog"></i> Edit Website</button>
+                
+                <div class="zenith-admin-profile">
+                    <div class="avatar" style="background: #20c997;">AD</div>
+                    <div class="info">
+                        <strong id="adminDispName">Master Admin</strong>
+                        <span id="adminDispEmail">admin@photon.com</span>
+                    </div>
+                    <i class="fas fa-sign-out-alt logout-icon" onclick="closeModal('masterAdminModal')"></i>
+                </div>
+            </div>
+            
+            <div class="zenith-main-content">
+                <div class="zenith-header">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search anything...">
+                    </div>
+                    <div class="header-actions">
+                        <button class="new-order-btn" style="background:#20c997;">+ New Media</button>
+                        <i class="fas fa-moon"></i>
+                        <i class="fas fa-bell"></i>
+                        <div class="avatar-small">AD</div>
+                    </div>
+                </div>
+
+                <div id="dashboardTab" class="admin-tab">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle" id="adminWelcomeMsg">Welcome back. Here's your website overview.</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">Total Users <div class="icon-box blue"><i class="fas fa-user-friends"></i></div></div>
+                            <h2 id="statTotalUsers">0</h2>
+                            <p class="trend up"><i class="fas fa-arrow-up"></i> Active now</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">Total Photos <div class="icon-box purple"><i class="fas fa-image"></i></div></div>
+                            <h2 id="statTotalPhotos">0</h2>
+                            <p class="trend up"><i class="fas fa-arrow-up"></i> Uploaded</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">Categories <div class="icon-box yellow"><i class="fas fa-layer-group"></i></div></div>
+                            <h2 id="statTotalCategories">0</h2>
+                            <p class="trend up"><i class="fas fa-arrow-up"></i> Active groups</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">System Status <div class="icon-box green"><i class="fas fa-check-circle"></i></div></div>
+                            <h2>Online</h2>
+                            <p class="trend up"><i class="fas fa-bolt"></i> Running smooth</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="uploadTab" class="admin-tab" style="display:none;">
+                    <h1 class="page-title">Upload Media</h1>
+                    <div class="form-container">
+                        <div style="background: #f8f9fc; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #ccc;">
+                            <label style="font-size: 12px; font-weight: bold; color: #555; display:block; margin-bottom:8px;">Option 1: Upload from Device</label>
+                            <input type="file" id="upFile" accept="image/*" style="border: none; padding: 0;">
+                        </div>
+                        
+                        <div style="text-align: center; color: #999; margin-bottom: 15px; font-size: 12px; font-weight: bold;">OR</div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-size: 12px; font-weight: bold; color: #555;">Option 2: Paste Image URL</label>
+                            <input type="text" id="upUrl" placeholder="Image URL (Cloud Link)">
+                        </div>
+
+                        <select id="upCat" class="admin-select"></select>
+                        <input type="text" id="upDesc" placeholder="Image Description">
+                        <button class="submit-btn" style="background:#20c997;" onclick="adminAddPhoto()">Publish to Site</button>
+                    </div>
+                </div>
+
+                <div id="manageTab" class="admin-tab" style="display:none;">
+                    <h1 class="page-title">Manage Categories</h1>
+                    <div class="form-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <input type="text" id="newCatName" placeholder="New Category Name" style="margin:0;">
+                        <input type="text" id="newCatImg" placeholder="Cover Image URL" style="margin:0;">
+                        <button class="submit-btn" style="margin-top: 0; width: auto; padding: 0 20px; background:#20c997;" onclick="addNewCategory()">Add</button>
+                    </div>
+                    <div id="categoryList" class="cat-list-container"></div>
+                </div>
+
+                <div id="settingsTab" class="admin-tab" style="display:none;">
+                    <h1 class="page-title">Edit Website & Profile</h1>
+                    <div class="form-container">
+                        <h4 style="margin-bottom: 10px; color:#555;">Website Settings</h4>
+                        <input type="text" id="editSiteTitle" placeholder="Change Website Name (e.g., Photon)">
+                        
+                        <h4 style="margin: 20px 0 10px 0; color:#555;">Admin Profile Settings</h4>
+                        <input type="text" id="editAdminName" placeholder="Change Admin Name">
+                        <input type="email" id="editAdminEmail" placeholder="Change Admin Email">
+                        <input type="password" id="editAdminPass" placeholder="Change Admin Password">
+                        
+                        <button class="submit-btn" style="background:#20c997;" onclick="saveAdminSettings()">Save All Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h3>Login to Photon</h3>
+            <input type="text" id="loginUser" placeholder="Username">
+            <input type="password" id="loginPass" placeholder="Password">
+            <button class="submit-btn" onclick="handleAuth('login')">Login</button>
+            <span class="forgot-link" onclick="startForgotPasswordFlow()">Forgot Password?</span>
+            <p onclick="closeModal('loginModal')" class="close-txt">Cancel</p>
+        </div>
+    </div>
+
+    <div id="forgotModalStep1" class="modal">
+        <div class="modal-content">
+            <h3>Find Your Account</h3>
+            <p style="font-size:12px; color:#666; margin-bottom:15px;">Enter your registered email to receive a password reset link.</p>
+            <input type="email" id="forgotEmailInput" placeholder="Enter Registered Email">
+            <button class="submit-btn" onclick="sendResetEmailMock()">Send Link</button>
+            <p onclick="closeModal('forgotModalStep1')" class="close-txt">Cancel</p>
+        </div>
+    </div>
+
+    <div id="mockEmailInboxModal" class="modal" style="background: rgba(0,0,0,0.95);">
+        <div class="modal-content" style="border: 2px solid #20c997; text-align: left;">
+            <h3 style="color:#20c997; border-bottom:1px solid #ddd; padding-bottom:10px;"><i class="fas fa-envelope"></i> Simulated Email Inbox</h3>
+            <p style="font-size: 12px; color: #555; margin-top:10px;"><b>From:</b> support@photon.com</p>
+            <p style="font-size: 12px; color: #555;"><b>To:</b> <span id="displayMockEmail">user@mail.com</span></p>
+            <p style="font-size: 12px; color: #555; margin-bottom: 20px;"><b>Subject:</b> Password Reset Request</p>
+            <p style="font-size: 14px;">Hello,</p>
+            <p style="font-size: 14px; margin-bottom: 20px;">You requested a password reset. Click the button below to set a new password.</p>
+            <button class="submit-btn" style="background:#000; color:#fff;" onclick="openNewPasswordTab()">Reset My Password</button>
+        </div>
+    </div>
+
+    <div id="newPasswordModal" class="modal">
+        <div class="modal-content">
+            <h3>Create New Password</h3>
+            <p style="font-size:12px; color:#666; margin-bottom:15px;">Please enter your new secure password.</p>
+            <input type="hidden" id="resetTargetEmail">
+            <input type="password" id="newSecurePass" placeholder="New Password">
+            <input type="password" id="confirmSecurePass" placeholder="Confirm Password">
+            <button class="submit-btn" onclick="finalizePasswordReset()">Save & Login</button>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <h3>Create Account</h3>
+            <input type="text" id="regUser" placeholder="Username">
+            <input type="email" id="regEmail" placeholder="Email Address">
+            <input type="password" id="regPass" placeholder="Password">
+            <button class="submit-btn" onclick="handleAuth('signup')">Sign Up</button>
+            <p onclick="closeModal('signupModal')" class="close-txt">Cancel</p>
+        </div>
+    </div>
+
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content welcome-content">
+            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80" alt="Welcome" class="welcome-img">
+            <h2 id="welcomeText">Welcome!</h2>
+            <p>Ready to explore amazing photography?</p>
+            <button class="submit-btn" onclick="closeModal('welcomeModal')">Let's Go!</button>
+        </div>
+    </div>
+
+    <div id="galleryModal" class="modal">
+        <div class="gallery-container">
+            <div class="gallery-header">
+                <h2 id="galleryTitle">GALLERY</h2>
+                <div class="gallery-controls">
+                    <input type="text" id="searchInput" placeholder="Search by description..." onkeyup="renderGallery()">
+                    <select id="categoryFilter" onchange="renderGallery()"></select>
+                </div>
+                <button class="close-gallery" onclick="closeModal('galleryModal')">&times;</button>
+            </div>
+            <div class="gallery-grid" id="photoGrid"></div>
+        </div>
+    </div>
+
+    <div id="lightboxModal" class="modal lightbox">
+        <button class="close-gallery lightbox-close" onclick="closeModal('lightboxModal')">&times;</button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="Full Screen">
+            <div class="lightbox-info">
+                <p id="lightboxDesc">Description here</p>
+                <div class="menu-3dots">
+                    <i class="fas fa-ellipsis-v dot-btn" onclick="toggleDotMenu()"></i>
+                    <div class="dot-dropdown" id="dotMenu">
+                        <a id="downloadLink" href="" download target="_blank"><i class="fas fa-download"></i> Download</a>
+                        <a onclick="saveImage()"><i class="fas fa-bookmark"></i> Save</a>
+                        <a onclick="favoriteImage()"><i class="fas fa-heart"></i> Favorite</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p> | Made with AI for PRAVIN.TECHWORKS@GMAIL.COM</p>
+        <p> | 1st Project with AI </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
